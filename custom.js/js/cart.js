@@ -1,4 +1,4 @@
-const getInputValueById = (inputId) => {
+getInputValueById = (inputId) => {
     const inputField = document.getElementById(inputId);
     const inputValue = inputField.value;
     inputField.value = '';
@@ -7,33 +7,37 @@ const getInputValueById = (inputId) => {
 const addProduct = () => {
     const product = getInputValueById('product-name-field');
     const quantity = getInputValueById('product-quntity-field');
-    // console.log(product, quantity)
-    displayProduct(product, quantity);
-    saveItemToLocalStorage(product, quantity);
-    //* set to local storage
-    // localStorage.setItem(product, quantity)
+    displayProductOnUi(product, quantity);
+    setItemToLocalStorage(product, quantity)
 }
-
-const getShoppingCartFromLocalStorage = () => {
+const getCartFromLocalStorage = () => {
     const savedCart = localStorage.getItem('cart');
     let cart = {};
     if(savedCart){
         cart = JSON.parse(savedCart)
-    }return cart;
-};
-const saveItemToLocalStorage = (product, quantity) => {
-    let cart = getShoppingCartFromLocalStorage();
+    }
+    return cart;
+}
+const setItemToLocalStorage = (product, quantity) => {
+    const cart = getCartFromLocalStorage();
     cart[product] = quantity;
-    console.log(cart)
-    const stringify = JSON.stringify(cart);
-    //* save to local storage
-    localStorage.setItem('cart', stringify);
+    const stringified = JSON.stringify(cart);
+    localStorage.setItem('cart', stringified);
 }
 
-
-const displayProduct = (product, quantity) => {
+const displayProductOnUi = (product, quantity) => {
     const productContainer = document.getElementById('product-container');
     const li = document.createElement('li');
-    li.innerText = `${product}: ${quantity}`;
+    li.innerText = `${product} : ${quantity}`;
     productContainer.appendChild(li);
 }
+const displayAllProduct = () => {
+    const cart = getCartFromLocalStorage();
+    console.log(cart)
+    for(const product in cart){
+        const quantity = cart[product];
+        console.log(product, quantity)
+        displayProductOnUi(product, quantity)
+    }
+}
+displayAllProduct();
